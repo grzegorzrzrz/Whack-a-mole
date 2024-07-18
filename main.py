@@ -65,8 +65,8 @@ def main():
             break
 
         elapsed_time = time.time() - start_time
-        if elapsed_time < 0.5:
-            time.sleep(0.5 - elapsed_time)
+        if elapsed_time < 0.2:
+            time.sleep(0.2 - elapsed_time)
 
 if __name__ == '__main__':
     main()
