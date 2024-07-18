@@ -7,7 +7,8 @@ import keyboard
 template_paths = [
     "match_1.png",
     "match_2.png",
-    "match_3.png"
+    "match_3.png",
+    "match_4.png"
 ]
 monitor = {"top": 323, "left": 267, "width": 1327, "height": 598}
 
@@ -20,33 +21,25 @@ for path in template_paths:
         h, w = template_img.shape[:2]
         template_dimensions.append((w, h))
 
-threshold = 0.6
+threshold = 0.5
 
 def perform_template_matching(sct):
-
     input_img = np.array(sct.grab(monitor))
 
-    results = []
-
-    for template_img in templates:
+    for i, (template_img, (w, h)) in enumerate(zip(templates, template_dimensions)):
         result = cv2.matchTemplate(input_img, template_img, cv2.TM_CCOEFF_NORMED)
-        results.append(result)
-
-    matches = []
-
-    for result, (w, h) in zip(results, template_dimensions):
-        yloc, xloc = np.where(result >= threshold)
-        for (x, y) in zip(xloc, yloc):
-            matches.append([x, y, w, h])
-
-    matches, weights = cv2.groupRectangles(matches, groupThreshold=1, eps=0.2)
-
-    for (x, y, w, h) in matches:
-        center_x = x + monitor['left'] + int(w / 2)
-        center_y = y + monitor['top'] + int(h / 2)
-
-        pyautogui.moveTo(center_x, center_y)
-        pyautogui.click()
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+        print(max_val)
+        if max_val > threshold:
+            x, y = max_loc
+            center_x = monitor['left'] + x + int(w / 2)
+            center_y = monitor['top'] + y + int(h / 2)
+            pyautogui.moveTo(center_x, center_y)
+            if i == 0:
+                pyautogui.doubleClick()
+            else:
+                pyautogui.click()
+            break
 
 def main():
     print("Press 'e' to start")
