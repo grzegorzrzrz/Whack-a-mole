@@ -30,6 +30,7 @@ This repository contains a Python script that automates the playing of the Whack
 2. **Start the automation**:
 
     - Press `e` to start the automation.
+    - Have the game open in browser and visible on your screen
     - Press `q` to quit the automation.
 
 ## Code Explanation
